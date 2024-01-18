@@ -21,13 +21,14 @@ export const login = async (req, res) => {
       return res.status(401).json({ message: 'Invalid password' });
     }
     const access_token = generateAccessToken({ id: existUser.id, roles: existUser.roles });
+    const refresh_token = generateRefreshToken({ id: existUser.id, roles: existUser.roles });
+
     res.cookie('token', access_token, {
       httpOnly: true,
-      secure: false,
-      sameSite: 'strict',
-      path: '/',
+      // secure: process.env.NODE_ENV === 'production' ? true : false,
+      secure: true,
+      sameSite: 'none',
     });
-    const refresh_token = generateRefreshToken({ id: existUser.id, roles: existUser.roles });
 
     return res.status(200).json({
       message: 'Login successful',
@@ -37,6 +38,7 @@ export const login = async (req, res) => {
         email: existUser.email,
         roles: existUser.roles,
       },
+      token: access_token,
     });
   } catch (error) {
     console.error(error);
