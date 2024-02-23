@@ -13,9 +13,8 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'product',
     format: 'jpeg',
-    resource_type: 'image', // supports promises as well
+    resource_type: 'image',
     public_id: (req, file) => {
       const timeStamp = format(new Date(), 'yyyy-MM-dd-HHmmss');
       const uniqueIdentifier = uuidv4();
@@ -23,12 +22,9 @@ const storage = new CloudinaryStorage({
     },
   },
 });
-
-export const uploadImage = multer({ storage: storage });
-
+export const upload = multer({ storage: storage });
 export const deleteImage = async (file) => {
   try {
-    // console.log('Uploading image to Cloudinary:', img);
     const result = await cloudinary.uploader.destroy(file);
     return result;
   } catch (error) {
