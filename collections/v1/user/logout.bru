@@ -6,8 +6,8 @@ meta {
 
 post {
   url: {{URL}}/api/v1/auth/logout
-  body: json
-  auth: none
+  body: none
+  auth: bearer
 }
 
 body:json {
@@ -15,4 +15,8 @@ body:json {
     "username": "test",
     "password": "test123"
   }
+}
+
+vars:post-response {
+  access_token: 
 }
