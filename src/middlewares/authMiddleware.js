@@ -2,14 +2,19 @@ import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 
 const verifyToken = (req, res, next) => {
+  const userId = req.headers['x-client-id'];
+  console.log(userId);
+  if (!userId) return res.status(401).json({ message: 'Invalid request' });
+
+  const access_token = req.cookies.token;
+  if (!access_token) return res.status(401).json({ message: "You're not authenticated" });
+
   try {
-    const access_token = req.cookies.token;
-    if (!access_token) return res.status(401).json({ message: "You're not authenticated" });
-    jwt.verify(access_token, process.env.SECRET_ACCESS_TOKEN, (err, user) => {
+    jwt.verify(access_token, process.env.SECRET_ACCESS_TOKEN, (err, decoded) => {
       if (err) {
         return res.status(403).json({ message: 'Invalid Token' });
       }
-      req.user = user;
+      if (userId !== decoded.id) return res.status(401).json({ message: 'Invalid User' });
       next();
     });
   } catch (error) {
