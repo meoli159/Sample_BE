@@ -5,7 +5,7 @@ import morgan from 'morgan';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import 'dotenv/config';
-import { DBConnect } from './models/configs/DBConnect.js';
+// import { DBConnect } from './models/configs/DBConnect.js';
 import { routes } from './routes/v1/index.js';
 
 export const app = express();
@@ -27,6 +27,7 @@ app.use(compression());
 app.use(cors({ origin: process.env.REACT_URL, credentials: true }));
 
 //router
+// app.get('/', 'Hello World');
 app.use('/api/v1', routes);
 
 //run database connect
