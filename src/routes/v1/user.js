@@ -13,11 +13,12 @@ import { isAllowedRoleMiddleware, authMiddleware } from '../../middlewares/authM
 const authRoutes = express.Router();
 authRoutes.post('/login', login);
 authRoutes.post('/register', register);
-
+// authRoutes.get('/users', userList);
 authRoutes.use(authMiddleware);
 authRoutes.post('/logout', logOut);
-authRoutes.get('/users', authMiddleware, isAllowedRoleMiddleware('admin'), userList);
-authRoutes.post('/user', authMiddleware, isAllowedRoleMiddleware('admin'), createUser);
-authRoutes.patch('/user/:id', authMiddleware, updateUser);
-authRoutes.delete('/user/:id', authMiddleware, isAllowedRoleMiddleware('admin'), deleteUser);
+
+authRoutes.patch('/user/:id', updateUser);
+authRoutes.post('/user', isAllowedRoleMiddleware('admin'), createUser);
+authRoutes.get('/users', isAllowedRoleMiddleware('admin'), userList);
+authRoutes.delete('/user/:id', isAllowedRoleMiddleware('admin'), deleteUser);
 export { authRoutes };

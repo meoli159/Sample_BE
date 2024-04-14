@@ -25,7 +25,7 @@ export const login = async (req, res) => {
 
     res.cookie('token', access_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production' ? true : false,
+
       sameSite: 'none',
     });
 
@@ -138,43 +138,5 @@ export const userList = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(400).send('Bad Request');
-  }
-};
-
-export const createUser = async (req, res) => {
-  try {
-    const { username, password, email, address, phone } = req.body;
-    const reg = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    const checkMail = reg.test(email);
-
-    if (!username || !password) {
-      return res.status(401).json({ message: 'Please fill all required fields' });
-    }
-    const existUser = await User.findOne({ username: username });
-    if (existUser) {
-      return res.status(400).json({ message: 'Username already existed' });
-    }
-    if (!checkMail) {
-      return res.json({
-        message: 'Invalid Mail',
-      });
-    }
-    if (password && password.length <= 6) {
-      return res.json({
-        message: 'Please provide a password with more than 6 characters',
-      });
-    }
-    const user = await User.create({
-      username: username,
-      password: await hashPassword(password),
-      email: email,
-      phone: phone,
-      address: address,
-    });
-
-    return res.status(200).json({ data: user });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error.' });
   }
 };
